@@ -1,0 +1,37 @@
+<!doctype html><meta charset="utf-8">
+<h2>Clinician Feedback</h2>
+<form id="f">
+  <label>Prediction ID <input name="prediction_id" type="number" required /></label><br>
+  <label>Clinician ID <input name="clinician_id" required /></label><br>
+  <label>Final Label
+    <select name="final_label"><option>AD</option><option>MCI</option><option>CN</option><option>OTHER</option></select>
+  </label><br>
+  <label>Confidence (0–1) <input name="confidence" type="number" step="0.01" min="0" max="1" value="0.85" /></label><br>
+  <label>Agree with model? <input name="agrees_with_model" type="checkbox" checked /></label><br>
+  <label>Notes<br><textarea name="notes" rows="4" cols="60"></textarea></label><br>
+  <label>Tags (comma) <input name="tags" placeholder="spurious:AGE,check:CDRSB" /></label><br>
+  <label>Edited fields (JSON) <input name="edited_fields" placeholder='{"MMSE":27}' /></label><br>
+  <label>Use for retrain? <input name="use_for_retrain" type="checkbox" checked /></label><br>
+  <button>Submit</button>
+</form>
+<script>
+document.getElementById('f').onsubmit = async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const body = {
+    prediction_id: Number(fd.get('prediction_id')),
+    clinician_id: fd.get('clinician_id'),
+    final_label: fd.get('final_label'),
+    confidence: Number(fd.get('confidence')),
+    agrees_with_model: fd.get('agrees_with_model') === 'on',
+    notes: fd.get('notes'),
+    tags: (fd.get('tags')||'').split(',').map(s=>s.trim()).filter(Boolean),
+    edited_fields: fd.get('edited_fields') ? JSON.parse(fd.get('edited_fields')) : {},
+    use_for_retrain: fd.get('use_for_retrain') === 'on'
+  };
+  const r = await fetch('http://127.0.0.1:8000/feedback', {
+    method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
+  });
+  alert('Saved: ' + (await r.text()));
+};
+</script>
