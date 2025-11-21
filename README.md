@@ -127,6 +127,8 @@ python .\peek_fb.py --db .\hitl.db
 # Retrain with feedback
 python .\retrain_fb.py --db .\hitl.db --mri .\preprocessed_mri --features .\final_features.csv
 
+--
+
 ## Project workflow overview
 1.Convert ADNI MRI scans (DICOM → NIfTI) and preprocess volumes.
 
@@ -141,6 +143,8 @@ python .\retrain_fb.py --db .\hitl.db --mri .\preprocessed_mri --features .\fina
 6. Apply explainability methods (SHAP, LIME, PDP, Grad‑CAM) to interpret predictions.
 
 7. Use HITL feedback to refine labels and retrain models iteratively.
+
+--
 
 ## Notes on mismatched or missing dependencies/files
 The top‑level requirements.txt contains core packages but may omit extras (e.g., shap, lime, nibabel).
