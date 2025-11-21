@@ -67,7 +67,7 @@ pip install nibabel SimpleITK matplotlib seaborn shap lime
 pip install -r requirements.txt
 # additional packages used by some scripts
 pip install nibabel SimpleITK matplotlib seaborn shap lime
-Convert and preprocess MRI
+
 
 ```
 3. Convert and preprocess MRI
