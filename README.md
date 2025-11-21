@@ -103,7 +103,7 @@ python .\extract_features.py --input .\features_diag.csv --output .\final_featur
 ```powershell
 python .\ensure_ad_links_from_path_tokens.py --mri .\preprocessed_mri --clinical .\final_features.csv
 python .\link_ad_by_site_and_date.py --mri .\preprocessed_mri --clinical .\final_features.csv
-Train models
+
 
 ```
 
@@ -114,7 +114,7 @@ Train models
 python .\train_baseline.py --features .\final_features.csv
 python .\train_multimodal_ai.py --mri .\preprocessed_mri --features .\final_features.csv
 python .\run_full_pipeline.py --config .\config.yaml
-Evaluate and score
+
 
 ```
 
@@ -124,7 +124,7 @@ Evaluate and score
 ```powershell
 python .\score_all_ad.py --model .\trained_model.pth --data .\test_data
 python .\score_multimodal_all.py --model .\trained_model.pth --mri .\preprocessed_mri --features .\final_features.csv
-Run explainability overlays
+
 
 ```
 
@@ -135,7 +135,7 @@ Run explainability overlays
 python .\make_shap.py --model .\trained_model.pth --features .\final_features.csv
 python .\make_lime_pdp_tabular.py --model .\trained_model.pth --features .\final_features.csv
 python .\gradcam_3d.py --model .\trained_model.pth --mri .\preprocessed_mri\subj01.nii.gz
-Human‑in‑the‑loop feedback
+
 
 ```
 
