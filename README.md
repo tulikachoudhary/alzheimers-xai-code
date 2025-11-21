@@ -46,9 +46,11 @@ Start with the included `requirements.txt` and add extras as needed.
 
 ## Quickstart (Windows PowerShell)
 
-```
+
 1. Create and activate a virtual environment
 
+
+```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 
@@ -56,68 +58,89 @@ pip install -r requirements.txt
 # additional packages used by some scripts
 pip install nibabel SimpleITK matplotlib seaborn shap lime
 
+```
+
 2. Install dependencies
 
-powershell
+
+```powershell
 pip install -r requirements.txt
 # additional packages used by some scripts
 pip install nibabel SimpleITK matplotlib seaborn shap lime
 Convert and preprocess MRI
 
+```
 3. Convert and preprocess MRI
 
-powershell
+
+```powershell
 # DICOM → NIfTI
 .\dcm2niix.exe -o .\nifti_output .\dicom_input
 python .\convert_adni_dicom_to_nifti.py --input .\dicom_input --output .\nifti_output
 python .\convert_dicom_batch.py --root .\adni_dicom --out .\adni_nifti
 
+```
 4. Build clinical and genetic feature tables
 
 # Preprocess MRI
 python .\preprocess_mri.py --input .\adni_nifti --output .\preprocessed_mri
 Build clinical and genetic feature tables
 
-powershell
+
+```powershell
 python .\merge_clinical.py --tables .\clinical_csvs --out .\merged_features.csv
 python .\merge_features_with_adni.py --input .\clinical_csvs --output .\features.csv
 python .\diag_convert.py --input .\features.csv --output .\features_diag.csv
 python .\extract_features.py --input .\features_diag.csv --output .\final_features.csv
-Link MRI and clinical data
+
+```
 
 5. Link MRI and clinical data
 
-powershell
+
+```powershell
 python .\ensure_ad_links_from_path_tokens.py --mri .\preprocessed_mri --clinical .\final_features.csv
 python .\link_ad_by_site_and_date.py --mri .\preprocessed_mri --clinical .\final_features.csv
 Train models
 
+```
+
 6. Train models
 
-powershell
+
+```powershell
 python .\train_baseline.py --features .\final_features.csv
 python .\train_multimodal_ai.py --mri .\preprocessed_mri --features .\final_features.csv
 python .\run_full_pipeline.py --config .\config.yaml
 Evaluate and score
 
+```
+
 7. Evaluate and score
 
-powershell
+
+```powershell
 python .\score_all_ad.py --model .\trained_model.pth --data .\test_data
 python .\score_multimodal_all.py --model .\trained_model.pth --mri .\preprocessed_mri --features .\final_features.csv
 Run explainability overlays
 
+```
+
 8. Run explainability overlays
 
-powershell
+
+```powershell
 python .\make_shap.py --model .\trained_model.pth --features .\final_features.csv
 python .\make_lime_pdp_tabular.py --model .\trained_model.pth --features .\final_features.csv
 python .\gradcam_3d.py --model .\trained_model.pth --mri .\preprocessed_mri\subj01.nii.gz
 Human‑in‑the‑loop feedback
 
+```
+
 9. Human‑in‑the‑loop feedback
 
-powershell
+
+```powershell
 # Launch feedback form
 start .\feedback_form.html
 
@@ -132,28 +155,28 @@ python .\retrain_fb.py --db .\hitl.db --mri .\preprocessed_mri --features .\fina
 
 # **Project Workflow Overview**
 
-Converts ADNI MRI scans (DICOM → NIfTI) and preprocesses volumes.
+- Converts ADNI MRI scans (DICOM → NIfTI) and preprocesses volumes.
 
-Merges clinical, cognitive, demographic, and genetic tables into tabular features.
+- Merges clinical, cognitive, demographic, and genetic tables into tabular features.
 
-Aligns MRI scans with clinical rows by subject ID and exam date.
+- Aligns MRI scans with clinical rows by subject ID and exam date.
 
-Trains baseline tabular models and multimodal fusion models (3D‑CNN + Bi‑LSTM).
+- Trains baseline tabular models and multimodal fusion models (3D‑CNN + Bi‑LSTM).
 
-Evaluates models and exports predictions.
+- Evaluates models and exports predictions.
 
-Applies explainability methods (SHAP, LIME, PDP, Grad‑CAM) to interpret predictions.
+- Applies explainability methods (SHAP, LIME, PDP, Grad‑CAM) to interpret predictions.
 
-Uses HITL feedback to refine labels and retrain models iteratively.
+- Uses HITL feedback to refine labels and retrain models iteratively.
 
 ---
 
 ## **Notes on mismatched or missing dependencies/files**
 
-The top‑level requirements.txt contains core packages but may omit extras (e.g., shap, lime, nibabel).
+- The top‑level requirements.txt contains core packages but may omit extras (e.g., shap, lime, nibabel).
 
-Some scripts may reference either PyTorch or TensorFlow — install both if needed.
+- Some scripts may reference either PyTorch or TensorFlow — install both if needed.
 
-Ensure ADNI data paths are correctly set; raw data is not included in this repo.
+- Ensure ADNI data paths are correctly set; raw data is not included in this repo.
 
-HITL feedback requires SQLite (hitl.db) and the provided HTML form.
+- HITL feedback requires SQLite (hitl.db) and the provided HTML form.
