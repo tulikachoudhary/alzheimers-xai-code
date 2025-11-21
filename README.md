@@ -1,4 +1,4 @@
-Alzheimer’s XAI codebase
+## Alzheimer’s XAI codebase
 Transparent, multimodal, explainable AI framework for Alzheimer’s Disease (AD) research using ADNI. This project fuses structural MRI with clinical, cognitive, and genetic features, trains a 3D-CNN + Bi-LSTM fusion model, and provides XAI overlays (SHAP, LIME, PDP, Grad-CAM) to interpret predictions. Optional human in the loop (HITL) feedback allows clinicians to refine the model over time.
 Important: This code is for research only. It is not a medical device and must not be used for clinical diagnosis.
 Project overview
