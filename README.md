@@ -1,95 +1,157 @@
-## Alzheimer’s XAI codebase
-Transparent, multimodal, explainable AI framework for Alzheimer’s Disease (AD) research using ADNI. This project fuses structural MRI with clinical, cognitive, and genetic features, trains a 3D-CNN + Bi-LSTM fusion model, and provides XAI overlays (SHAP, LIME, PDP, Grad-CAM) to interpret predictions. Optional human in the loop (HITL) feedback allows clinicians to refine the model over time.
-Important: This code is for research only. It is not a medical device and must not be used for clinical diagnosis.
+# Alzheimer’s-XAI-Codebase
 
-## Project overview
-This repository moves beyond black-box AD classifiers by pairing state-of-the-art multimodal modeling with explainability that clinicians can examine and challenge.
-•	Multimodal fusion: T1-weighted MRI volumes via 3D-CNN combined with longitudinal clinical/genetic features via Bi-LSTM.
-•	Explainability first: SHAP, LIME, PDP, and 3D Grad-CAM to visualize and quantify drivers of predictions.
-•	Clinician feedback loop: HITL interface and retraining scripts to incorporate expert corrections and uncertainty flags.
-•	Reproducible pipeline: End-to-end orchestration from MRI preprocessing to scoring and XAI export.
+A multimodal, explainable AI framework for Alzheimer’s Disease (AD) research using the ADNI dataset.  
+This toolkit fuses MRI, clinical, cognitive, and genetic features, trains a 3D‑CNN + Bi‑LSTM fusion model, and provides explainability overlays (SHAP, LIME, PDP, Grad‑CAM). It also supports an optional human‑in‑the‑loop (HITL) feedback loop for clinician review and iterative retraining.
 
-## Data access and inputs
-•	Source: Alzheimer’s Disease Neuroimaging Initiative (ADNI). Registration and approval are required to download data.
-•	Modalities:
-o	MRI: T1-weighted structural MRI in DICOM format, converted to NIfTI.
-o	Clinical/cognitive: ADNI CSVs (e.g., MMSE, RAVLT, FAQ, PTDEMOG).
-o	Genetics: SNP/APOE4 indicators from ADNI genetics tables.
-•	Local setup: Adapt paths in scripts to your ADNI directory structure. Raw ADNI files are not stored in this repo.
+---
 
-## Installation and environment
-•	Requirements:
-o	Python: 3.10+
-o	GPU: CUDA-enabled GPU recommended for 3D-CNN training and Grad-CAM
-o	Libraries: numpy, pandas, scikit-learn, torch or tensorflow, nibabel/SimpleITK, matplotlib, seaborn, shap, lime
-•	Setup:
-o	Create environment: Use your preferred virtual environment tool.
-o	Install dependencies:
-bash
+## Quick summary
+- Converts ADNI MRI scans (DICOM → NIfTI) and preprocesses volumes.
+- Merges clinical, demographic, cognitive, and genetic features into tabular datasets.
+- Trains multimodal models (3D‑CNN for MRI + Bi‑LSTM for tabular features).
+- Provides explainability overlays (SHAP, LIME, PDP, Grad‑CAM).
+- Supports clinician feedback (HITL) to refine predictions and retrain models.
+
+---
+
+## Contents (high level)
+- `convert_adni_dicom_to_nifti.py`, `convert_dicom_batch.py` — DICOM → NIfTI conversion utilities.
+- `preprocess_mri.py` — MRI preprocessing (resizing, cropping, normalization).
+- `merge_clinical.py`, `merge_features_with_adni.py`, `extract_features.py` — Clinical/genetic feature merging and engineering.
+- `ensure_ad_links_from_path_tokens.py`, `link_ad_by_site_and_date.py` — Linking MRI scans with clinical rows.
+- `train_baseline.py`, `train_multimodal_ai.py`, `lstm_fusion.py` — Baseline and multimodal training scripts.
+- `score_all_ad.py`, `score_multimodal_all.py` — Evaluation and scoring utilities.
+- `make_shap.py`, `make_lime_pdp_tabular.py`, `gradcam_3d.py`, `xai_master.py` — Explainability scripts.
+- `feedback_form.html`, `hitl.db`, `retrain_fb.py` — Human‑in‑the‑loop feedback interface and retraining.
+
+---
+
+## Requirements
+- Python 3.10+ recommended (tested on Python 3.10–3.11).
+- CUDA‑enabled GPU recommended for 3D‑CNN training and Grad‑CAM.
+- The provided `requirements.txt` contains core dependencies. Additional packages may be needed.
+
+Recommended Python packages (installed via pip):
+- numpy
+- pandas
+- scikit-learn
+- torch or tensorflow (depending on training scripts)
+- nibabel, SimpleITK
+- matplotlib, seaborn
+- shap, lime
+
+Start with the included `requirements.txt` and add extras as needed.
+
+---
+
+## Quickstart (Windows PowerShell)
+
+1. Create and activate a virtual environment
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+
 pip install -r requirements.txt
-o	Configure paths: Update config files or script arguments to point to your ADNI folders.
+# additional packages used by some scripts
+pip install nibabel SimpleITK matplotlib seaborn shap lime
 
-Steps to run the project :
+2. Install dependencies
 
-# 1) Convert and preprocess MRI
-# DICOM → NIfTI conversion
-./dcm2niix -o ./nifti_output ./dicom_input
+powershell
+pip install -r requirements.txt
+# additional packages used by some scripts
+pip install nibabel SimpleITK matplotlib seaborn shap lime
+Convert and preprocess MRI
 
-python convert_adni_dicom_to_nifti.py --input ./dicom_input --output ./nifti_output
-python convert_dicom_batch.py --root ./adni_dicom --out ./adni_nifti
+3. Convert and preprocess MRI
 
-# MRI preprocessing
-python preprocess_mri.py --input ./adni_nifti --output ./preprocessed_mri
+powershell
+# DICOM → NIfTI
+.\dcm2niix.exe -o .\nifti_output .\dicom_input
+python .\convert_adni_dicom_to_nifti.py --input .\dicom_input --output .\nifti_output
+python .\convert_dicom_batch.py --root .\adni_dicom --out .\adni_nifti
 
-# Visualization
-python view_mri_slice.py --file ./preprocessed_mri/subj01.nii.gz
-python viz_topk_slices.py --model ./trained_model.pth --input ./preprocessed_mri/subj01.nii.gz
+4. Build clinical and genetic feature tables
 
-# 2) Build clinical and genetic feature tables
-python merge_clinical.py --tables ./clinical_csvs --out ./merged_features.csv
-python merge_features_with_adni.py --input ./clinical_csvs --output ./features.csv
-python diag_convert.py --input ./features.csv --output ./features_diag.csv
-python eda_features.py --input ./features_diag.csv
-python extract_features.py --input ./features_diag.csv --output ./final_features.csv
+# Preprocess MRI
+python .\preprocess_mri.py --input .\adni_nifti --output .\preprocessed_mri
+Build clinical and genetic feature tables
 
-# 3) Link MRI and clinical data
-python ensure_ad_links_from_path_tokens.py --mri ./preprocessed_mri --clinical ./final_features.csv
-python link_ad_by_site_and_date.py --mri ./preprocessed_mri --clinical ./final_features.csv
-python force_link.py --mri ./preprocessed_mri --clinical ./final_features.csv
-python row_confusion.py --clinical ./final_features.csv
+powershell
+python .\merge_clinical.py --tables .\clinical_csvs --out .\merged_features.csv
+python .\merge_features_with_adni.py --input .\clinical_csvs --output .\features.csv
+python .\diag_convert.py --input .\features.csv --output .\features_diag.csv
+python .\extract_features.py --input .\features_diag.csv --output .\final_features.csv
+Link MRI and clinical data
 
-# 4) Train models
-python train_baseline.py --features ./final_features.csv
-python train_ad_baseline.py --features ./final_features.csv
+5. Link MRI and clinical data
 
-python train_multimodal_ai.py --mri ./preprocessed_mri --features ./final_features.csv
-python train_multimodal_ptid_split.py --mri ./preprocessed_mri --features ./final_features.csv
-python train_multimodal_ptid_strat.py --mri ./preprocessed_mri --features ./final_features.csv
+powershell
+python .\ensure_ad_links_from_path_tokens.py --mri .\preprocessed_mri --clinical .\final_features.csv
+python .\link_ad_by_site_and_date.py --mri .\preprocessed_mri --clinical .\final_features.csv
+Train models
 
-python run_full_pipeline.py --config ./config.yaml
+6. Train models
 
-# 5) Evaluate and score
-python score_all_ad.py --model ./trained_model.pth --data ./test_data
-python score_multimodal_all.py --model ./trained_model.pth --mri ./preprocessed_mri --features ./final_features.csv
-python topk_confident_ad.py --predictions ./preds.csv --k 10
+powershell
+python .\train_baseline.py --features .\final_features.csv
+python .\train_multimodal_ai.py --mri .\preprocessed_mri --features .\final_features.csv
+python .\run_full_pipeline.py --config .\config.yaml
+Evaluate and score
 
-# 6) Explainability (XAI)
-python make_shap.py --model ./trained_model.pth --features ./final_features.csv
-python make_shap_tabular.py --model ./trained_model.pth --features ./final_features.csv
-python make_shap_mri.py --model ./trained_model.pth --mri ./preprocessed_mri
+7. Evaluate and score
 
-python make_lime_pdp_tabular.py --model ./trained_model.pth --features ./final_features.csv
-python gradcam_3d.py --model ./trained_model.pth --mri ./preprocessed_mri/subj01.nii.gz
-python xai_master.py --model ./trained_model.pth --mri ./preprocessed_mri --features ./final_features.csv
+powershell
+python .\score_all_ad.py --model .\trained_model.pth --data .\test_data
+python .\score_multimodal_all.py --model .\trained_model.pth --mri .\preprocessed_mri --features .\final_features.csv
+Run explainability overlays
 
-# 7) Human-in-the-loop feedback
+8. Run explainability overlays
+
+powershell
+python .\make_shap.py --model .\trained_model.pth --features .\final_features.csv
+python .\make_lime_pdp_tabular.py --model .\trained_model.pth --features .\final_features.csv
+python .\gradcam_3d.py --model .\trained_model.pth --mri .\preprocessed_mri\subj01.nii.gz
+Human‑in‑the‑loop feedback
+
+9. Human‑in‑the‑loop feedback
+
+powershell
 # Launch feedback form
-open feedback_form.html
+start .\feedback_form.html
 
 # Inspect feedback
-python peek_fb.py --db ./hitl.db
-python pending_python.py --db ./hitl.db
+python .\peek_fb.py --db .\hitl.db
 
 # Retrain with feedback
-python retrain_fb.py --db ./hitl.db --mri ./preprocessed_mri --features ./final_features.csv
+python .\retrain_fb.py --db .\hitl.db --mri .\preprocessed_mri --features .\final_features.csv
+
+Project workflow overview
+Convert ADNI MRI scans (DICOM → NIfTI) and preprocess volumes.
+
+Merge clinical, cognitive, demographic, and genetic tables into tabular features.
+
+Align MRI scans with clinical rows by subject ID and exam date.
+
+Train baseline tabular models and multimodal fusion models (3D‑CNN + Bi‑LSTM).
+
+Evaluate models and export predictions.
+
+Apply explainability methods (SHAP, LIME, PDP, Grad‑CAM) to interpret predictions.
+
+Use HITL feedback to refine labels and retrain models iteratively.
+
+Notes on mismatched or missing dependencies/files
+The top‑level requirements.txt contains core packages but may omit extras (e.g., shap, lime, nibabel).
+
+Some scripts may reference either PyTorch or TensorFlow — install both if needed.
+
+Ensure ADNI data paths are correctly set; raw data is not included in this repo.
+
+HITL feedback requires SQLite (hitl.db) and the provided HTML form.
+
+Disclaimer
+This repository is intended for research and educational purposes only. It is not reviewed or approved as a medical device and must not be used for clinical diagnosis, patient management, or healthcare decisions.
+
 
