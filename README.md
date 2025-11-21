@@ -127,25 +127,31 @@ python .\peek_fb.py --db .\hitl.db
 # Retrain with feedback
 python .\retrain_fb.py --db .\hitl.db --mri .\preprocessed_mri --features .\final_features.csv
 
+---
 ## Project workflow overview
-- Converts ADNI MRI scans (DICOM → NIfTI) and preprocesses volumes.
-- Merges clinical, cognitive, demographic, and genetic tables into tabular features.
-- Aligns MRI scans with clinical rows by subject ID and exam date.
-- Trains baseline tabular models and multimodal fusion models (3D‑CNN + Bi‑LSTM).
-- Evaluates models and exports predictions.
-- Applies explainability methods (SHAP, LIME, PDP, Grad‑CAM) to interpret predictions.
-- Uses HITL feedback to refine labels and retrain models iteratively.
+
+Converts ADNI MRI scans (DICOM → NIfTI) and preprocesses volumes.
+
+Merges clinical, cognitive, demographic, and genetic tables into tabular features.
+
+Aligns MRI scans with clinical rows by subject ID and exam date.
+
+Trains baseline tabular models and multimodal fusion models (3D‑CNN + Bi‑LSTM).
+
+Evaluates models and exports predictions.
+
+Applies explainability methods (SHAP, LIME, PDP, Grad‑CAM) to interpret predictions.
+
+Uses HITL feedback to refine labels and retrain models iteratively.
 
 ---
 
 ## Notes on mismatched or missing dependencies/files
-- The top‑level `requirements.txt` contains core packages but may omit extras (e.g., shap, lime, nibabel).
-- Some scripts may reference either PyTorch or TensorFlow — install both if needed.
-- Ensure ADNI data paths are correctly set; raw data is not included in this repo.
-- HITL feedback requires SQLite (`hitl.db`) and the provided HTML form.
 
----
+The top‑level requirements.txt contains core packages but may omit extras (e.g., shap, lime, nibabel).
 
-## Disclaimer
-This repository is intended for **research and educational purposes only**.  
-It is not reviewed or approved as a medical device and must not be used for clinical diagnosis, patient management, or healthcare decisions.
+Some scripts may reference either PyTorch or TensorFlow — install both if needed.
+
+Ensure ADNI data paths are correctly set; raw data is not included in this repo.
+
+HITL feedback requires SQLite (hitl.db) and the provided HTML form.
