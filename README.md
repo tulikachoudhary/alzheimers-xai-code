@@ -46,9 +46,9 @@ Start with the included `requirements.txt` and add extras as needed.
 
 ## Quickstart (Windows PowerShell)
 
+```
 1. Create and activate a virtual environment
 
-```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 
@@ -128,7 +128,7 @@ python .\peek_fb.py --db .\hitl.db
 python .\retrain_fb.py --db .\hitl.db --mri .\preprocessed_mri --features .\final_features.csv
 
 
----
+```
 
 # **Project Workflow Overview**
 
