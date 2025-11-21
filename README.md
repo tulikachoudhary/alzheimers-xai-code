@@ -127,10 +127,10 @@ python .\peek_fb.py --db .\hitl.db
 # Retrain with feedback
 python .\retrain_fb.py --db .\hitl.db --mri .\preprocessed_mri --features .\final_features.csv
 
+
 ---
 
 # **Project Workflow Overview**
-
 
 Converts ADNI MRI scans (DICOM → NIfTI) and preprocesses volumes.
 
