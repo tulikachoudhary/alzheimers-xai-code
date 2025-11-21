@@ -82,12 +82,14 @@ python .\convert_dicom_batch.py --root .\adni_dicom --out .\adni_nifti
 ```
 4. Build clinical and genetic feature tables
 
+```powershell
 # Preprocess MRI
 python .\preprocess_mri.py --input .\adni_nifti --output .\preprocessed_mri
-Build clinical and genetic feature tables
+
+#Build clinical and genetic feature tables
 
 
-```powershell
+powershell
 python .\merge_clinical.py --tables .\clinical_csvs --out .\merged_features.csv
 python .\merge_features_with_adni.py --input .\clinical_csvs --output .\features.csv
 python .\diag_convert.py --input .\features.csv --output .\features_diag.csv
