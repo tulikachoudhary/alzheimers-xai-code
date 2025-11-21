@@ -1,20 +1,23 @@
 ## Alzheimer’s XAI codebase
 Transparent, multimodal, explainable AI framework for Alzheimer’s Disease (AD) research using ADNI. This project fuses structural MRI with clinical, cognitive, and genetic features, trains a 3D-CNN + Bi-LSTM fusion model, and provides XAI overlays (SHAP, LIME, PDP, Grad-CAM) to interpret predictions. Optional human in the loop (HITL) feedback allows clinicians to refine the model over time.
 Important: This code is for research only. It is not a medical device and must not be used for clinical diagnosis.
-Project overview
+
+## Project overview
 This repository moves beyond black-box AD classifiers by pairing state-of-the-art multimodal modeling with explainability that clinicians can examine and challenge.
 •	Multimodal fusion: T1-weighted MRI volumes via 3D-CNN combined with longitudinal clinical/genetic features via Bi-LSTM.
 •	Explainability first: SHAP, LIME, PDP, and 3D Grad-CAM to visualize and quantify drivers of predictions.
 •	Clinician feedback loop: HITL interface and retraining scripts to incorporate expert corrections and uncertainty flags.
 •	Reproducible pipeline: End-to-end orchestration from MRI preprocessing to scoring and XAI export.
-Data access and inputs
+
+## Data access and inputs
 •	Source: Alzheimer’s Disease Neuroimaging Initiative (ADNI). Registration and approval are required to download data.
 •	Modalities:
 o	MRI: T1-weighted structural MRI in DICOM format, converted to NIfTI.
 o	Clinical/cognitive: ADNI CSVs (e.g., MMSE, RAVLT, FAQ, PTDEMOG).
 o	Genetics: SNP/APOE4 indicators from ADNI genetics tables.
 •	Local setup: Adapt paths in scripts to your ADNI directory structure. Raw ADNI files are not stored in this repo.
-Installation and environment
+
+## Installation and environment
 •	Requirements:
 o	Python: 3.10+
 o	GPU: CUDA-enabled GPU recommended for 3D-CNN training and Grad-CAM
