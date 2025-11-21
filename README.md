@@ -128,7 +128,8 @@ python .\peek_fb.py --db .\hitl.db
 python .\retrain_fb.py --db .\hitl.db --mri .\preprocessed_mri --features .\final_features.csv
 
 ---
-## Project workflow overview
+## **Project Workflow Overview**
+
 
 Converts ADNI MRI scans (DICOM → NIfTI) and preprocesses volumes.
 
@@ -146,7 +147,7 @@ Uses HITL feedback to refine labels and retrain models iteratively.
 
 ---
 
-## Notes on mismatched or missing dependencies/files
+## **Notes on mismatched or missing dependencies/files**
 
 The top‑level requirements.txt contains core packages but may omit extras (e.g., shap, lime, nibabel).
 
