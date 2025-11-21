@@ -89,7 +89,6 @@ python .\preprocess_mri.py --input .\adni_nifti --output .\preprocessed_mri
 #Build clinical and genetic feature tables
 
 
-powershell
 python .\merge_clinical.py --tables .\clinical_csvs --out .\merged_features.csv
 python .\merge_features_with_adni.py --input .\clinical_csvs --output .\features.csv
 python .\diag_convert.py --input .\features.csv --output .\features_diag.csv
