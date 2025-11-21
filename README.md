@@ -127,22 +127,22 @@ python .\peek_fb.py --db .\hitl.db
 # Retrain with feedback
 python .\retrain_fb.py --db .\hitl.db --mri .\preprocessed_mri --features .\final_features.csv
 
-Project workflow overview
-Convert ADNI MRI scans (DICOM → NIfTI) and preprocess volumes.
+## Project workflow overview
+1.Convert ADNI MRI scans (DICOM → NIfTI) and preprocess volumes.
 
-Merge clinical, cognitive, demographic, and genetic tables into tabular features.
+2.Merge clinical, cognitive, demographic, and genetic tables into tabular features.
 
-Align MRI scans with clinical rows by subject ID and exam date.
+3. Align MRI scans with clinical rows by subject ID and exam date.
 
-Train baseline tabular models and multimodal fusion models (3D‑CNN + Bi‑LSTM).
+4. Train baseline tabular models and multimodal fusion models (3D‑CNN + Bi‑LSTM).
 
-Evaluate models and export predictions.
+5. Evaluate models and export predictions.
 
-Apply explainability methods (SHAP, LIME, PDP, Grad‑CAM) to interpret predictions.
+6. Apply explainability methods (SHAP, LIME, PDP, Grad‑CAM) to interpret predictions.
 
-Use HITL feedback to refine labels and retrain models iteratively.
+7. Use HITL feedback to refine labels and retrain models iteratively.
 
-Notes on mismatched or missing dependencies/files
+## Notes on mismatched or missing dependencies/files
 The top‑level requirements.txt contains core packages but may omit extras (e.g., shap, lime, nibabel).
 
 Some scripts may reference either PyTorch or TensorFlow — install both if needed.
@@ -151,7 +151,6 @@ Ensure ADNI data paths are correctly set; raw data is not included in this repo.
 
 HITL feedback requires SQLite (hitl.db) and the provided HTML form.
 
-Disclaimer
-This repository is intended for research and educational purposes only. It is not reviewed or approved as a medical device and must not be used for clinical diagnosis, patient management, or healthcare decisions.
+
 
 
